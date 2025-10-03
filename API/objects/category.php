@@ -105,6 +105,19 @@ Class Category{
     }
 
 
+    public function getCategoryNamesByUser($userId) {
+    $query = "SELECT CategoryId, CategoryName 
+              FROM " . $this->table_name . " 
+              WHERE UserId = :UserId";
+
+    $stmt = $this->conn->prepare($query);
+    $stmt->bindParam(":UserId", $userId, PDO::PARAM_INT);
+    $stmt->execute();
+    return $stmt;
+}
+
+
+
 }
 
 
