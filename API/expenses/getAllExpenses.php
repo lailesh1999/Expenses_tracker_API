@@ -17,12 +17,15 @@ $expense = new Expense($db);
 // If you want to filter by UserId (optional)
 $userId = isset($_GET['UserId']) ? $_GET['UserId'] : null;
 
-// Fetch data
+// Fetch data with JOIN to get category name
 if ($userId) {
     $stmt = $expense->getUserExpenses($userId);
 } else {
-    // fallback → get all expenses
-    $query = "SELECT * FROM expenses ORDER BY ExpenseDate DESC";
+    // Modified query with JOIN to get category name
+    $query = "SELECT e.*, c.CategoryName 
+              FROM expenses e 
+              LEFT JOIN categories c ON e.CategoryId = c.CategoryId 
+              ORDER BY e.ExpenseDate DESC";
     $stmt = $db->prepare($query);
     $stmt->execute();
 }
@@ -38,14 +41,15 @@ if ($num > 0) {
         extract($row);
 
         $expense_item = array(
-            "ExpenseId"   => $ExpenseId,
-            "UserId"      => $UserId,
-            "CategoryId"  => $CategoryId,
-            "Title"       => $Title,
-            "Amount"      => $Amount,
-            "ExpenseDate" => $ExpenseDate,
-            "Notes"       => $Notes,
-            "CreatedAt"   => $CreatedAt
+            "ExpenseId"    => $ExpenseId,
+            "UserId"       => $UserId,
+            "CategoryId"   => $CategoryId,
+            "CategoryName" => $CategoryName, // Add category name here
+            "Title"        => $Title,
+            "Amount"       => $Amount,
+            "ExpenseDate"  => $ExpenseDate,
+            "Notes"        => $Notes,
+            "CreatedAt"    => $CreatedAt
         );
 
         array_push($expenses_arr["records"], $expense_item);

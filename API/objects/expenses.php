@@ -49,12 +49,18 @@ class Expense {
 
     // Fetch all expenses for a user
     public function getUserExpenses($userId) {
-        $query = "SELECT * FROM " . $this->table_name . " WHERE UserId = :UserId ORDER BY ExpenseDate DESC";
-        $stmt = $this->conn->prepare($query);
-        $stmt->bindParam(":UserId", $userId);
-        $stmt->execute();
-        return $stmt;
-    }
+    $query = "SELECT e.*, c.CategoryName 
+              FROM " . $this->table_name . " e 
+              LEFT JOIN categories c ON e.CategoryId = c.CategoryId 
+              WHERE e.UserId = :UserId 
+              ORDER BY e.ExpenseDate DESC";
+    
+    $stmt = $this->conn->prepare($query);
+    $stmt->bindParam(":UserId", $userId);
+    $stmt->execute();
+    
+    return $stmt;
+}
 
     // Fetch single expense by ID
     public function getExpenseById($id) {
