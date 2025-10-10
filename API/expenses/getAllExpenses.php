@@ -35,24 +35,23 @@ $num = $stmt->rowCount();
 
 if ($num > 0) {
     $expenses_arr = [];
-    $expenses_arr["records"] = [];
+    $expenses_arr["expensesList"] = [];
 
     while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
         extract($row);
 
         $expense_item = array(
             "ExpenseId"    => $ExpenseId,
-            "UserId"       => $UserId,
             "CategoryId"   => $CategoryId,
             "CategoryName" => $CategoryName, // Add category name here
             "Title"        => $Title,
             "Amount"       => $Amount,
             "ExpenseDate"  => $ExpenseDate,
             "Notes"        => $Notes,
-            "CreatedAt"    => $CreatedAt
+    
         );
 
-        array_push($expenses_arr["records"], $expense_item);
+        array_push($expenses_arr["expensesList"], $expense_item);
     }
 
     http_response_code(200);
